@@ -27,6 +27,7 @@ LABEL \
   vf-OS.compose.2.environment.POSTGRES_PASSWORD="rhpassword" \
   \
   vf-OS.compose.3.serviceName="efrequesthandler" \
+  vf-OS.compose.3.depends_on.0="efdbrequesthandler" \
   vf-OS.compose.3.image="vfos/ef-requesthandler" \
   vf-OS.compose.3.depends_on.0="efdbrequesthandler" \
   \
@@ -36,6 +37,8 @@ LABEL \
   vf-OS.compose.4.socket="true" \
   \
   vf-OS.compose.5.serviceName="ef-gui" \
-  vf-OS.compose.5.image="vfos/ef-gui"
+  vf-OS.compose.5.image="vfos/ef-gui" \
+  vf-OS.compose.5.depends_on.0="efregistry" \
+  vf-OS.compose.5.depends_on.1="efrequesthandler" 
 
 CMD [ "ps", "faux" ]

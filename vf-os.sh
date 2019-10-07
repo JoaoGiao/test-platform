@@ -284,12 +284,7 @@ services:
         source: $CURRENT_DIR/security/mysql/etc/my.cnf
     networks:
       - execution-manager-net
-  enablersframework:
-    image: localhost:5000/vfos/enablersframework
-    hostname: idm
-    networks:
-      - execution-manager-net
-
+      
 EOF
 
 #Setup basic network configuration
