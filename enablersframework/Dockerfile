@@ -28,16 +28,16 @@ LABEL \
   \
   vf-OS.compose.3.serviceName="efrequesthandler" \
   vf-OS.compose.3.depends_on.0="efdbrequesthandler" \
-  vf-OS.compose.3.image="vfos/ef-requesthandler" \
+  vf-OS.compose.3.image="vfos/ef-requesthandler:latest" \
   vf-OS.compose.3.depends_on.0="efdbrequesthandler" \
   \
   vf-OS.compose.4.serviceName="efregistry" \
-  vf-OS.compose.4.image="vfos/ef-registry" \
+  vf-OS.compose.4.image="vfos/ef-registry:latest" \
   vf-OS.compose.4.depends_on.0="efdbregistry" \
   vf-OS.compose.4.socket="true" \
   \
   vf-OS.compose.5.serviceName="ef-gui" \
-  vf-OS.compose.5.image="vfos/ef-gui" \
+  vf-OS.compose.5.image="vfos/ef-gui:latest" \
   vf-OS.compose.5.depends_on.0="efregistry" \
   vf-OS.compose.5.depends_on.1="efrequesthandler" 
 
