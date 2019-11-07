@@ -21,8 +21,8 @@ shopt -s nullglob
 #SET TO TRUE and MODIFY DOMAIN/EMAIL for https
 USE_HTTPS=/bin/false
 #ACME_DOMAIN_NAME="35.181.109.46.nip.io"
-ACME_DOMAIN_NAME="localhost"
-ACME_EXTERNAL_IP=127.0.0.1
+ACME_DOMAIN_NAME="heitor"
+ACME_EXTERNAL_IP=10.172.66.112
 ACME_EMAIL="ludo@almende.org"
 
 
@@ -119,26 +119,26 @@ services:
       - HOST_PWD=$CURRENT_DIR
     networks:
       - execution-manager-net
-  aim:
-    image: localhost:5000/vfos/aim
-    restart: "unless-stopped"
-    depends_on:
-      - registry
-    command: ["-b", "0.0.0.0","-Dkeycloak.profile.feature.docker=enabled", "-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.file=/opt/jboss/vf-OS-realm.json", "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING"]
-    environment:
-      - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=vf-OS-test
-      - PROXY_ADDRESS_FORWARDING=true
-    networks:
-      - execution-manager-net
-    volumes:
-      - $CURRENT_DIR/.persist/aim_persist:/opt/jboss/keycloak/standalone/data
-      - $CURRENT_DIR/aim/vf-OS-realm.json:/opt/jboss/vf-OS-realm.json
-    labels:
-      - "traefik.frontend.rule=PathPrefix:/aim"
-      - "traefik.frontend.priority=-1"
-      - "traefik.port=8080"
-      - "traefik.docker.network=execution-manager-net"
+#  aim:
+#    image: localhost:5000/vfos/aim
+#    restart: "unless-stopped"
+#    depends_on:
+#      - registry
+#    command: ["-b", "0.0.0.0","-Dkeycloak.profile.feature.docker=enabled", "-Dkeycloak.migration.action=import", "-Dkeycloak.migration.provider=singleFile", "-Dkeycloak.migration.file=/opt/jboss/vf-OS-realm.json", "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING"]
+#    environment:
+#      - KEYCLOAK_USER=admin
+#      - KEYCLOAK_PASSWORD=vf-OS-test
+#      - PROXY_ADDRESS_FORWARDING=true
+#    networks:
+#      - execution-manager-net
+#    volumes:
+#      - $CURRENT_DIR/.persist/aim_persist:/opt/jboss/keycloak/standalone/data
+#      - $CURRENT_DIR/aim/vf-OS-realm.json:/opt/jboss/vf-OS-realm.json
+#    labels:
+#      - "traefik.frontend.rule=PathPrefix:/aim"
+#      - "traefik.frontend.priority=-1"
+#      - "traefik.port=8080"
+#      - "traefik.docker.network=execution-manager-net"
   deployment:
     image: localhost:5000/vfos/deploy
     restart: "unless-stopped"
@@ -163,27 +163,27 @@ services:
       - "traefik.frontend.priority=-1"
     networks:
       - execution-manager-net
-  dashboard:
-    image: localhost:5000/vfos/system-dashboard
-    restart: "unless-stopped"
-    depends_on:
-      - registry
-    labels:
-      - "traefik.frontend.rule=PathPrefixStrip:/systemdashboard"
-      - "traefik.frontend.priority=-1"
-    networks:
-      - system-dashboard-net
-  testserver:
-    image: localhost:5000/vfos/test-server
-    restart: "unless-stopped"
-    depends_on:
-      - registry
-    labels:
-      - "traefik.frontend.rule=PathPrefixStrip:/testserver"
-    volumes:
-      - $CURRENT_DIR/testImages:/usr/src/app/static
-    networks:
-      - execution-manager-net
+#  dashboard:
+#    image: localhost:5000/vfos/system-dashboard
+#    restart: "unless-stopped"
+#    depends_on:
+#      - registry
+#    labels:
+#      - "traefik.frontend.rule=PathPrefixStrip:/systemdashboard"
+#      - "traefik.frontend.priority=-1"
+#    networks:
+#      - system-dashboard-net
+#  testserver:
+#    image: localhost:5000/vfos/test-server
+#    restart: "unless-stopped"
+#    depends_on:
+#      - registry
+#    labels:
+#      - "traefik.frontend.rule=PathPrefixStrip:/testserver"
+#    volumes:
+#      - $CURRENT_DIR/testImages:/usr/src/app/static
+#    networks:
+#      - execution-manager-net
   packager:
     image: localhost:5000/vfos/packaging
     restart: "unless-stopped"
@@ -202,8 +202,8 @@ services:
     networks:
       - execution-manager-net
   che:
-    image: cmsvfos/studio:latest
-#    image: hub.caixamagica.pt/vfos/studio:nightly
+#    image: cmsvfos/studio:latest
+    image: cmsvfos/studio:alpha
     restart: "unless-stopped"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -225,65 +225,65 @@ services:
       - "traefik.enable=true"
       - "traefik.frontend.entryPoints=che"
       - "traefik.port=8081"
-  frontend_editor:
-    image: gklasen/vfos_frontend_editor:latest
-    restart: "unless-stopped"
-    labels:
-      - "traefik.main.frontend.rule=PathPrefix:/frontend_editor"
-      - "traefik.main.port=80"
-      - "traefik.iframe.frontend.rule=PathPrefix:/frontend_iframe"
-      - "traefik.iframe.port=4201"
-    networks:
-      - execution-manager-net
-    environment:
-      - ASSET_NAME=frontend_editor
-      - WORKSPACE=hello_vfos
-  processapi:
-    image: informationcatalyst/vfos-process-api
-    hostname: processapi
-    labels:
-      - vf-OS=true
-      - "traefik.frontend.rule=PathPrefixStrip:/processapi"
-      - "traefik.main.port=5000"
-    environment:
-      - RUN_TYPE=processapi
-      - CorsOrigins=*
-      - StorageType=remote
-      - RemoteStorageSettings__Address=https://icemain2.hopto.org:7080
-      - MarketplaceSettings__Address=https://vfos-datahub.ascora.de/v1
-      - StudioSettings__Address=http://172.17.0.1:8081/
-  processdesigner:
-    image: informationcatalyst/vfos-process-designer
-    hostname: processdesigner
-    labels:
-      - vf-OS=true
-      - "traefik.frontend.rule=PathPrefixStrip:/processdesigner"
-    environment:
-      - "RUN_TYPE=processdesigner"
-      - "API_END_POINT=http://$ACME_DOMAIN_NAME/processapi"
-    depends_on:
-      - processapi
-  idm:
-    image: localhost:5000/vfos/idm
-    hostname: idm
-    environment:
-      - IDM_DB_HOST=security_mysql
-    depends_on:
-      - security_mysql
-    networks:
-      - execution-manager-net
-  security_mysql:
-    image: mysql:5.7.25
-    hostname: security_mysql
-    environment:
-      - "MYSQL_ALLOW_EMPTY_PASSWORD=true"
-    volumes:
-      - $CURRENT_DIR/security/mysql/data:/var/lib/mysql
-      - type: bind
-        target: /etc/my.cnf
-        source: $CURRENT_DIR/security/mysql/etc/my.cnf
-    networks:
-      - execution-manager-net
+#  frontend_editor:
+#    image: gklasen/vfos_frontend_editor:latest
+#    restart: "unless-stopped"
+#    labels:
+#      - "traefik.main.frontend.rule=PathPrefix:/frontend_editor"
+#      - "traefik.main.port=80"
+#      - "traefik.iframe.frontend.rule=PathPrefix:/frontend_iframe"
+#      - "traefik.iframe.port=4201"
+#    networks:
+#      - execution-manager-net
+#    environment:
+#      - ASSET_NAME=frontend_editor
+#      - WORKSPACE=hello_vfos
+#  processapi:
+#    image: informationcatalyst/vfos-process-api
+#    hostname: processapi
+#    labels:
+#      - vf-OS=true
+#      - "traefik.frontend.rule=PathPrefixStrip:/processapi"
+#      - "traefik.main.port=5000"
+#    environment:
+#      - RUN_TYPE=processapi
+#      - CorsOrigins=*
+#      - StorageType=remote
+#      - RemoteStorageSettings__Address=https://icemain2.hopto.org:7080
+#      - MarketplaceSettings__Address=https://vfos-datahub.ascora.de/v1
+#      - StudioSettings__Address=http://172.17.0.1:8081/
+#  processdesigner:
+#    image: informationcatalyst/vfos-process-designer
+#    hostname: processdesigner
+#    labels:
+#      - vf-OS=true
+#      - "traefik.frontend.rule=PathPrefixStrip:/processdesigner"
+#    environment:
+#      - "RUN_TYPE=processdesigner"
+#      - "API_END_POINT=http://$ACME_DOMAIN_NAME/processapi"
+#    depends_on:
+#      - processapi
+#  idm:
+#    image: localhost:5000/vfos/idm
+#    hostname: idm
+#    environment:
+#      - IDM_DB_HOST=security_mysql
+#    depends_on:
+#      - security_mysql
+#    networks:
+#      - execution-manager-net
+#  security_mysql:
+#    image: mysql:5.7.25
+#    hostname: security_mysql
+#    environment:
+#      - "MYSQL_ALLOW_EMPTY_PASSWORD=true"
+#    volumes:
+#      - $CURRENT_DIR/security/mysql/data:/var/lib/mysql
+#      - type: bind
+#        target: /etc/my.cnf
+#        source: $CURRENT_DIR/security/mysql/etc/my.cnf
+#    networks:
+#      - execution-manager-net
       
 EOF
 

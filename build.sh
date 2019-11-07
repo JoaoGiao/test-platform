@@ -11,11 +11,11 @@ docker build . -t vfos/exec-manager
 docker tag vfos/exec-manager localhost:5000/vfos/exec-manager
 docker push localhost:5000/vfos/exec-manager
 
-cd ../testServer
-rm -rf node_modules
-docker build . -t vfos/test-server
-docker tag vfos/test-server localhost:5000/vfos/test-server
-docker push localhost:5000/vfos/test-server
+#cd ../testServer
+#rm -rf node_modules
+#docker build . -t vfos/test-server
+#docker tag vfos/test-server localhost:5000/vfos/test-server
+#docker push localhost:5000/vfos/test-server
 
 cd ../deployment
 cp ../manifest2label.js ./
@@ -40,16 +40,16 @@ docker build . -t vfos/portal
 docker tag vfos/portal localhost:5000/vfos/portal
 docker push localhost:5000/vfos/portal
 
-cd ../systemDashboard
-rm -rf node_modules
-docker build . -t vfos/system-dashboard
-docker tag vfos/system-dashboard localhost:5000/vfos/system-dashboard
-docker push localhost:5000/vfos/system-dashboard
+#cd ../systemDashboard
+#rm -rf node_modules
+#docker build . -t vfos/system-dashboard
+#docker tag vfos/system-dashboard localhost:5000/vfos/system-dashboard
+#docker push localhost:5000/vfos/system-dashboard
 
-cd ../aim
-docker build . -t vfos/aim
-docker tag vfos/aim localhost:5000/vfos/aim
-docker push localhost:5000/vfos/aim
+#cd ../aim
+#docker build . -t vfos/aim
+#docker tag vfos/aim localhost:5000/vfos/aim
+#docker push localhost:5000/vfos/aim
 
 cd ../pubsub
 if [[ -d broker-auth-adapter ]]; then
@@ -75,17 +75,17 @@ docker build . -t vfos/enablersframework
 docker tag vfos/enablersframework localhost:5000/vfos/enablersframework
 docker push localhost:5000/vfos/enablersframework
 
-cd ../security
-cd pap
-docker build . -t vfos/idm
-docker tag vfos/idm localhost:5000/vfos/idm
-docker push localhost:5000/vfos/idm
-
-cd ../pep
-docker build . -t vfos/pep
-docker tag vfos/pep localhost:5000/vfos/pep
-docker push localhost:5000/vfos/pep
-cd ..
+#cd ../security
+#cd pap
+#docker build . -t vfos/idm
+#docker tag vfos/idm localhost:5000/vfos/idm
+#docker push localhost:5000/vfos/idm
+#
+#cd ../pep
+#docker build . -t vfos/pep
+#docker tag vfos/pep localhost:5000/vfos/pep
+#docker push localhost:5000/vfos/pep
+#cd ..
 
 cd ..
 ./installAsset.js localhost:5000/vfos/messaging messaging false
