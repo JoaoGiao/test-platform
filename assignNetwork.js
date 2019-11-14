@@ -44,6 +44,12 @@ if (services['efrequesthandler']){
   services['efrequesthandler'].networks.push('ef_efn');
 }
 
+if (services['efregistry']){
+  services['efregistry'].networks.push('ef_efn');
+}
+
+
+
 let networkSection = {}
 let counter = 0
 networks.map((network) => {
